@@ -1,8 +1,8 @@
 # The binary to build (just the basename).
-MODULE := blueprint
+MODULE := stellaris-technology-optimizer
 
 # Where to push the docker image.
-REGISTRY ?= docker.pkg.github.com/martinheinz/python-project-blueprint
+REGISTRY ?= docker.pkg.github.com/sisyphus192/stellaris-technology-optimizer
 
 IMAGE := $(REGISTRY)/$(MODULE)
 

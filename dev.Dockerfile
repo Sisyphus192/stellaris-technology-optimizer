@@ -1,26 +1,23 @@
-FROM python:3.8.1-buster AS builder
-RUN apt-get update && apt-get install -y --no-install-recommends --yes python3-venv gcc libpython3-dev && \
-    python3 -m venv /venv && \
-    /venv/bin/pip install --upgrade pip
+FROM python:3.9.4-slim AS builder
 
 FROM builder AS builder-venv
 
 COPY requirements.txt /requirements.txt
-RUN /venv/bin/pip install -r /requirements.txt
+RUN pip install -r /requirements.txt
 
 FROM builder-venv AS tester
 
 COPY . /app
 WORKDIR /app
-RUN /venv/bin/pytest
+RUN pytest
 
-FROM martinheinz/python-3.8.1-buster-tools:latest AS runner
-COPY --from=tester /venv /venv
+FROM builder AS runner
+COPY --from=tester /usr/local/lib/python3.9/ /usr/local/lib/python3.9/
 COPY --from=tester /app /app
 
 WORKDIR /app
 
-ENTRYPOINT ["/venv/bin/python3", "-m", "blueprint"]
+ENTRYPOINT ["python", "-m", "stellaris-technology-optimizer"]
 USER 1001
 
 LABEL name={NAME}
